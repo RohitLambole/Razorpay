@@ -1,0 +1,7 @@
+name=requirements.txt
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+pydantic==1.10.12
+supabase==0.2.9
+razorpay==1.0.0
+python-dotenv==1.0.0
