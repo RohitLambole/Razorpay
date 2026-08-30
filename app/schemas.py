@@ -31,3 +31,41 @@ class ApproveRequest(BaseModel):
 class PaymentCreateRequest(BaseModel):
     quote_id: str
     idempotency_key: str
+
+
+# LLM Action schemas
+class ActionParamsComputeQuote(BaseModel):
+    merchant_id: str
+    items: List[dict]
+
+
+class ActionParamsAskApproval(BaseModel):
+    quote_id: str
+    reason: str
+
+
+class ActionParamsCreateOrder(BaseModel):
+    quote_id: str
+    idempotency_key: str
+
+
+class LLMAction(BaseModel):
+    action: str
+    params: dict
+    explain: Optional[str]
+
+
+# Specific typed action unions (optional helpers)
+class ComputeQuoteAction(LLMAction):
+    action: str = "compute_quote"
+    params: ActionParamsComputeQuote
+
+
+class AskApprovalAction(LLMAction):
+    action: str = "ask_approval"
+    params: ActionParamsAskApproval
+
+
+class CreateOrderAction(LLMAction):
+    action: str = "create_order"
+    params: ActionParamsCreateOrder
