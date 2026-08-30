@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
+import math
 
 
 class QuoteItemIn(BaseModel):
@@ -12,6 +13,13 @@ class CreateQuote(BaseModel):
     merchant_id: str
     created_by: Optional[str] = "agent"
     items: List[QuoteItemIn]
+    requested_discount_percent: float = Field(0.0, ge=0.0)
+
+    @validator("requested_discount_percent")
+    def _check_finite(cls, v):
+        if not math.isfinite(v):
+            raise ValueError("requested_discount_percent must be a finite number")
+        return v
 
 
 class Quote(BaseModel):
