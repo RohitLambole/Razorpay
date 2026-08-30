@@ -28,8 +28,8 @@ def create_quote(payload: CreateQuote):
         })
         subtotal += line
 
-    # For demo, agent requests a discount% derived heuristically; here fixed placeholder 15%
-    requested_discount_percent = float(15.0)
+    # Use the requested discount percent provided by the caller (default 0.0).
+    requested_discount_percent = float(payload.requested_discount_percent)
 
     policy_result = policy.evaluate_discount(subtotal, requested_discount_percent)
     db.insert_policy_event({
@@ -55,6 +55,7 @@ def create_quote(payload: CreateQuote):
         "tax_cents": 0,
         "discount_cents": discount_cents,
         "final_amount_cents": final_amount,
+        "requested_discount_percent": requested_discount_percent,
     }
     persisted = db.persist_quote(quote_obj)
     # insert items linking to persisted quote
