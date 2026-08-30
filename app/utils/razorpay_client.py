@@ -8,6 +8,7 @@ import hmac
 
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+# module-level fallback value (captured at import time)
 RAZORPAY_WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET")
 
 if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
@@ -41,8 +42,12 @@ def create_order_and_payment_link(amount_cents: int, currency: str = "INR", idem
 
 
 def verify_webhook_signature(body: bytes, signature: str) -> bool:
-    if not RAZORPAY_WEBHOOK_SECRET:
+    # Read the webhook secret from environment at call time so tests that set
+    # the env var at runtime (monkeypatch.setenv) are respected. Fall back to the
+    # module-level value captured at import time if env var is not set.
+    secret = os.getenv("RAZORPAY_WEBHOOK_SECRET") or RAZORPAY_WEBHOOK_SECRET
+    if not secret:
         raise HTTPException(status_code=500, detail="Webhook secret not configured")
-    generated = hmac.new(RAZORPAY_WEBHOOK_SECRET.encode(), body, sha256).hexdigest()
-    # Razorpay signature uses sha256 HMAC, provided as hexdigest in headers
+    # Compute HMAC-SHA256 and compare in constant time
+    generated = hmac.new(secret.encode(), body, sha256).hexdigest()
     return hmac.compare_digest(generated, signature)
