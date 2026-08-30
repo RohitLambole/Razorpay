@@ -2,6 +2,9 @@
 Usage: python seeds/seed_data.py
 Make sure SUPABASE_URL and SUPABASE_SERVICE_KEY are set in your environment.
 """
+from dotenv import load_dotenv
+load_dotenv()
+
 from supabase import create_client
 import os
 import uuid
