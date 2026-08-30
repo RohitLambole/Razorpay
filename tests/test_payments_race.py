@@ -3,7 +3,7 @@ import pytest
 from fastapi.testclient import TestClient
 from types import SimpleNamespace
 
-from app.main import app
+from main import app
 from app import db
 from app.routers import payments as payments_router
 
