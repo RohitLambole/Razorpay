@@ -1,6 +1,6 @@
 import os
 from typing import Any, Dict, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime,timezone, timedelta
 from uuid import uuid4
 
 from dotenv import load_dotenv
@@ -161,7 +161,7 @@ def reserve_inventory_for_quote(
         List of reservation rows created.
     """
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     expires_at = (
         now + timedelta(minutes=ttl_minutes)
     ).isoformat()
@@ -201,6 +201,10 @@ def reserve_inventory_for_quote(
                 expires = datetime.fromisoformat(
                     reservation.get("expires_at")
                 )
+                 # Ensure DB timestamps are timezone-aware.
+                if expires.tzinfo is None:
+                    expires = expires.replace(tzinfo=timezone.utc)
+
             except Exception:
                 # If expiration format is invalid,
                 # treat it as active for safety.
