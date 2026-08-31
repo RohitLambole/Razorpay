@@ -29,14 +29,14 @@ def create_order_and_payment_link(amount_cents: int, currency: str = "INR", idem
     })
     # Create payment link referencing order
     pl_payload = {
-        "amount": amount_cents,
-        "currency": currency,
-        "reference_id": order.get("id"),
-        "description": "Agentic Commerce Payment",
-        "customer": {"name": "B2B Buyer"},
-        "notifications": {"sms": False, "email": False},
-        "callback_method": "get"
-    }
+    "amount": amount_cents,
+    "currency": currency,
+    "reference_id": order.get("id"),
+    "description": "Agentic Commerce Payment",
+    "customer": {"name": "B2B Buyer"},
+    "notify": {"sms": False, "email": False},
+    "callback_method": "get"
+}
     payment_link = _client.payment_link.create(pl_payload)
     return {"order": order, "payment_link": payment_link}
 
