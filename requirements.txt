@@ -1,8 +1,8 @@
-fastapi==0.95.2
-uvicorn==0.22.0
-pydantic==1.10.12
-supabase==0.3.0
-razorpay==2.0.1
-python-dotenv==1.0.0
-openai==0.27.8
-urllib3==1.26.16
+fastapi>=0.128.0
+uvicorn[standard]>=0.40.0
+pydantic>=2.13.0
+supabase>=2.27.0
+razorpay>=2.0.0
+python-dotenv>=1.0.1
+openai>=1.100.0
+urllib3>=2.5.0
